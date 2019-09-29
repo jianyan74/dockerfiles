@@ -1,0 +1,14 @@
+version: '3.0'
+services:
+  redis-db: # 相关文档 https://hub.docker.com/_/redis
+    build:
+      context: .
+      args:
+        - REDIS_VER=5
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./redis.conf:/usr/local/etc/redis/redis.conf:rw
+      - ../../data/redis:/data:rw
+      - ../../logs/redis:/var/log/:rw
+    restart: always

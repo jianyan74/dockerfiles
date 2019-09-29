@@ -1,0 +1,68 @@
+version: '3'
+services:
+  mysql:
+    image: swr.cn-north-1.myhuaweicloud.com/rj-bai/zabbix-mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - ./data:/var/lib/mysql
+    ports:
+      - 3307:3306
+    restart: always
+    networks:
+      - zabbix
+
+  zabbix-java-gateway:
+    image: swr.cn-north-1.myhuaweicloud.com/rj-bai/zabbix-java-gateway:4.0.1
+    ports:
+      - 10052:10052
+    restart: always
+    networks:
+      - zabbix
+
+  zabbix-server:
+    image: swr.cn-north-1.myhuaweicloud.com/rj-bai/zabbix-server:4.0.1
+    environment:
+      ZBX_JAVAGATEWAY: zabbix-java-gateway
+      ZBX_JAVAGATEWAY_ENABLE: "true"
+      DB_SERVER_HOST: mysql
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    links:
+      - mysql
+    ports:
+      - 10051:10051
+    depends_on:
+      - mysql
+    restart: always
+    networks:
+      - zabbix
+
+  zabbix-web:
+    image: swr.cn-north-1.myhuaweicloud.com/rj-bai/zabbix-web:4.0.1
+    environment:
+      PHP_TZ: Asia/Shanghai
+      DB_SERVER_HOST: mysql
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    links:
+      - mysql
+    ports:
+      - 8889:80
+    depends_on:
+      - zabbix-server
+      - mysql
+    restart: always
+    networks:
+      - zabbix
+
+networks:
+  zabbix:
+    driver: bridge

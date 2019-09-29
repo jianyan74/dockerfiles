@@ -1,0 +1,20 @@
+version: '3.0'
+services:
+  nginx: # 相关文档 https://hub.docker.com/_/nginx
+    container_name: nginx
+    build:
+      context: .
+      args:
+        - NGINX_VER=1.17
+    ports:
+      - "80:80"
+      - "8080:8080"
+      - "443:443"
+    volumes:
+      - ../../app/php:/data/www:rw
+      - ../../logs/nginx:/var/log/nginx
+      - ./conf.d:/etc/nginx/conf.d:ro
+      - ./certs/:/etc/nginx/certs
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    restart: always
+    command: nginx -g 'daemon off;'

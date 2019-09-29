@@ -1,0 +1,22 @@
+# ======================== Elasticsearch Configuration =========================
+# 设置集群Master配置信息
+cluster.name: es-cluster
+
+# 设置支持Elasticsearch-Head
+http.cors.enabled: true
+http.cors.allow-origin: "*"
+
+# 节点的名字，一般为Master或者Slave
+node.name: master
+# 节点是否为Master，设置为true的话，说明此节点为Master节点
+node.master: true
+# 设置网络，如果是本机的话就是192.168.0.1，其他服务器配置对应的IP地址即可(0.0.0.0支持外网访问)
+network.host: 0.0.0.0
+# 设置对外服务的Http端口，默认为 9200，可以修改默认设置
+http.port: 9200
+# 设置节点间交互的TCP端口，默认是9300
+transport.tcp.port: 9300
+# 手动指定可以成为Master的所有节点的Name或者IP，这些配置将会在第一次选举中进行计算
+cluster.initial_master_nodes: ["master"]
+# 集群发现节点信息，一般为其他节点IP加交互端口，这里一般填主机IP
+discovery.seed_hosts: ["192.168.0.1:9301", "192.168.0.1:9302", "192.168.0.1:9303"]

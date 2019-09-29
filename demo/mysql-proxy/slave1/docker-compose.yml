@@ -1,0 +1,21 @@
+version: '3.0'
+services:
+  mysql_slave1: # 相关文档 https://hub.docker.com/_/mysql
+    build:
+      context: ..
+      args:
+        - MYSQL_VER=8.0
+    container_name: mysql_slave1
+    ports:
+      - "3308:3306"
+    volumes:
+      - ./data:/var/lib/mysql:rw
+      - ./logs:/var/lib/mysql-logs:rw
+      - ./conf.d:/etc/mysql/conf.d:ro
+    environment:
+      MYSQL_ROOT_PASSWORD: 5eNyj6Nf # root密码 自行修改
+      MYSQL_DATABASE: rageframe # 数据库名
+      MYSQL_USER: test # 子账号
+      MYSQL_PASSWORD: 2589632147 # 子密码
+    restart: always
+    command: "--character-set-server=utf8mb4"

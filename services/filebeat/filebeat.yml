@@ -1,0 +1,26 @@
+filebeat.config:
+  modules:
+    path: ${path.config}/modules.d/*.yml
+    reload.enabled: false
+
+processors:
+  - add_cloud_metadata: ~
+
+#----------------------------- elasticsearch output --------------------------------
+  # output.elasticsearch:
+  #  hosts: '${ELASTICSEARCH_HOSTS:172.28.0.2:9200}'
+  #  username: '${ELASTICSEARCH_USERNAME:}'
+  #  password: '${ELASTICSEARCH_PASSWORD:}'
+
+#----------------------------- Logstash output --------------------------------
+# output.logstash:
+  # Logstash 不会组成集群，但是 Filebeat 会自己去轮询 Logstash 的服务器，去找到可用的 Logstash 服务器发送过去
+  # hosts: ["192.168.0.1:5044"]
+
+#----------------------------- Kafka output --------------------------------
+output.kafka:
+  enabled: true
+  hosts: ["192.168.0.1:9092"]
+  topic: filebeat
+  required_acks: 1
+  logging.level: debug

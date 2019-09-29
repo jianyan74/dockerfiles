@@ -1,0 +1,9 @@
+version: '3.0'
+services:
+  zabbix-agent: # 相关文档 https://hub.docker.com/_/zabbix-agent
+    image: zabbix/zabbix-agent:centos-4.0.1
+    environment:
+      ZBX_HOSTNAME: Zabbix server
+      ZBX_SERVER_HOST: "127.0.0.1"
+    restart: always
+    network_mode: host

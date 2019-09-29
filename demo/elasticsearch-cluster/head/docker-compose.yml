@@ -1,0 +1,6 @@
+version: '3.0'
+services:
+  es-head:
+    image: mobz/elasticsearch-head:5
+    ports:
+      - "9100:9100"

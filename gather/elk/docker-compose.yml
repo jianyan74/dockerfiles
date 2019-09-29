@@ -1,0 +1,50 @@
+version: '3.0'
+services:
+  elasticsearch: # 相关文档 https://hub.docker.com/_/elasticsearch
+    build:
+      context: ../../services/elasticsearch
+      args:
+        - ES_VER=7.3.2
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    environment:
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - ../../data/elasticsearch/plugins/:/usr/share/elasticsearch/plugins/
+      - ../../data/elasticsearch/:/usr/share/elasticsearch/data/
+      - ../../logs/elasticsearch/:/usr/share/elasticsearch/logs/
+      - ../../services/elasticsearch/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+
+  kibana: # 相关文档 https://hub.docker.com/_/kibana
+    build:
+      context: ../../services/kibana
+      args:
+        - KIBANA_VER=7.3.2 # 版本需要和es保持一致
+    links:
+      - elasticsearch:elasticsearch
+    volumes:
+      - ../../services/kibana/kibana.yml:/usr/share/kibana/config/kibana.yml
+    ports:
+      - "5601:5601"
+    restart: always
+
+  logstash: # 相关文档 https://hub.docker.com/_/logstash
+    build:
+      context: ../../services/logstash
+      args:
+        - LOGSTASH_VER=7.3.2
+    links:
+      - elasticsearch:elasticsearch
+    volumes:
+      - ../../logs/logstash/:/usr/share/logstash/logs/
+      - ../../data/logstash/:/usr/share/logstash/data/
+      - ../../logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml
+      - ../../logstash/config/pipeline.yml:/usr/share/logstash/config/pipeline.yml
+      - ../../services/logstash/pipeline/:/usr/share/logstash/pipeline/
+    restart: always

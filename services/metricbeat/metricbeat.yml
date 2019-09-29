@@ -1,0 +1,11 @@
+metricbeat.config.modules:
+  path: ${path.config}/modules.d/*.yml
+  reload.enabled: false
+
+processors:
+  - add_cloud_metadata: ~
+
+output.elasticsearch:
+  hosts: '${ELASTICSEARCH_HOSTS:192.168.0.1:9200}'
+  username: '${ELASTICSEARCH_USERNAME:}'
+  password: '${ELASTICSEARCH_PASSWORD:}'

@@ -1,0 +1,18 @@
+version: '3.0'
+services:
+  mongo-db: # 相关文档 https://hub.docker.com/_/mongo
+    container_name: mongo-db
+    build:
+      context: .
+      args:
+        - MONGO_VER=4.2
+    ports:
+      - "27017:27017"
+    volumes:
+      - ../../data/mongodb:/var/lib/mongodb:rw
+      - ../../logs/mongodb:/var/log/mongodb:rw
+      - ./mongod.conf:/etc/mongod.conf:ro
+    #environment:
+      #ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      #ME_CONFIG_MONGODB_ADMINPASSWORD: 8kisd
+    restart: always

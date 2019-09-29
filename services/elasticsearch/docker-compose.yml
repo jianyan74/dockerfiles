@@ -1,0 +1,28 @@
+version: '3.0'
+services:
+  elasticsearch: # 相关文档 https://hub.docker.com/_/elasticsearch
+    container_name: elasticsearch
+    build:
+      context: .
+      args:
+        - ES_VER=7.3.2
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    environment:
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - ../../data/elasticsearch/plugins/:/usr/share/elasticsearch/plugins/
+      - ../../data/elasticsearch/:/usr/share/elasticsearch/data/
+      - ../../logs/elasticsearch/:/usr/share/elasticsearch/logs/
+      - ./elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+
+  # elasticsearch-head:
+  #   image: salgat/elasticsearch-head
+  #   ports:
+  #     - "9100:9100"

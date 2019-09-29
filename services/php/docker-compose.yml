@@ -1,0 +1,19 @@
+version: '3.0'
+services:
+  php-fpm: # 相关文档 https://hub.docker.com/_/php
+    container_name: php-fpm
+    build:
+      context: .
+      args:
+        - PHP_VER=7.3-fpm # php版本
+        - SWOOLE_VER=4.4.5 # swoole版本
+        - COMPOSER_URL=https://mirrors.aliyun.com/composer/ # composer源url
+    ports:
+      - "9000:9000"
+    volumes:
+      - ../../app/php:/data/www:rw
+      - ../../logs/php:/var/log/php:rw
+      - ./php.ini:/usr/local/etc/php/php.ini:ro # 当前php配置文件；可以拷贝修改php-dev.ini为想要的配置
+      - ./php-fpm.conf:/usr/local/etc/php-fpm.conf:ro
+    restart: always
+    command: php-fpm

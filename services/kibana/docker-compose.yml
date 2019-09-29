@@ -1,0 +1,16 @@
+version: '3.0'
+services:
+  kibana: # 相关文档 https://hub.docker.com/_/kibana
+    container_name: kibana
+    build:
+      context: .
+      args:
+        - KIBANA_VER=7.3.2 # 版本需要和es保持一致
+    volumes:
+      - ./kibana.yml:/usr/share/kibana/config/kibana.yml
+    # environment:
+      # SERVER_NAME: kibana.example.org
+      # ELASTICSEARCH_HOSTS: http://elasticsearch.example.org
+    ports:
+      - "5601:5601"
+    restart: always

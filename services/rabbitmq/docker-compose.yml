@@ -1,0 +1,20 @@
+version: '3.0'
+services:
+  rabbitmq: # 相关文档 https://hub.docker.com/_/rabbitmq 或 https://www.rabbitmq.com/configure.html
+    build:
+      context: .
+      args:
+        - RABBITMQ_VER=3.7-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      - RABBITMQ_ERLANG_COOKIE='rabbitcookie'
+      # - RABBITMQ_NODENAME=rabbit@some-rabbit
+      - RABBITMQ_DEFAULT_USER=YtxiYt # 账号
+      - RABBITMQ_DEFAULT_PASS=zMHjxcSSD # 密码
+    volumes:
+       - ./rabbitmq.config:/etc/rabbitmq/rabbitmq.config
+       - ../../data/rabbitmq:/var/lib/rabbitmq/
+       - ../../logs/rabbitmq:/var/log/rabbitmq/
+    restart: always

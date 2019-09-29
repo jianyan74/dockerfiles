@@ -1,0 +1,14 @@
+# 设置集群Slave配置信息
+cluster.name: myEsCluster
+# 节点的名字，一般为Master或者Slave
+node.name: slave1
+# 节点是否为Master，设置为true的话，说明此节点为master节点
+node.master: false
+# 设置对外服务的Http端口，默认为 9200，可以修改默认设置
+http.port: 9600
+# 设置节点间交互的TCP端口，默认是9300
+transport.tcp.port: 9301
+# 设置网络，如果是本机的话就是127.0.0.1，其他服务器配置对应的IP地址即可(0.0.0.0支持外网访问)
+network.host: 0.0.0.0
+# 集群发现节点信息，一般为其他节点IP加交互端口，这里一般填主机IP
+discovery.seed_hosts: ["127.0.0.1:9300", "127.0.0.1:9302"]

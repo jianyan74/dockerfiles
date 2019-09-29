@@ -1,0 +1,51 @@
+[client]
+#password = your_password
+port=3306
+
+[mysql]
+no-auto-rehash
+
+[mysqld]
+port = 3306
+
+#skip-networking
+max_connections = 500 #最大连接数
+max_connect_errors = 100
+open_files_limit = 65535
+
+log-bin=mysql-bin
+log-bin-index = mysql-bin.index
+binlog_format = mixed
+log-slave-updates = 0
+binlog_format = mixed
+server_id = 101
+relay-log = mysql-relay-bin
+relay-log-index = mysql-relay-bin.index
+read-only = 1
+slave_net_timeout = 10
+character-set-server = utf8mb4
+
+#主从配置
+master_host='127.0.0.1',
+master_user='repl',
+master_password='repl',
+master_port=3306,
+master_log_file='mysql-bin.000001',
+master_log_pos=120;
+
+max_allowed_packet = 4M
+
+long_query_time = 1
+log-queries-not-using-indexes
+slow_query_log = 1
+slow_query_log_file =/var/lib/mysql-logs/slow.log
+
+back_log = 128
+wait_timeout = 100
+interactive_timeout = 200
+
+skip-host-cache
+skip-name-resolve
+
+default-storage-engine=INNODB
+

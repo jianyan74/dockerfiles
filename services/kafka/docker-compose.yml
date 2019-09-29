@@ -1,0 +1,48 @@
+version: '3.0'
+services:
+  zookeeper:
+    image: wurstmeister/zookeeper
+    ports:
+      - "2181:2181"
+    networks:
+      - zkm
+
+  kafka-manager:
+    image: sheepkiller/kafka-manager
+    links:
+      - zookeeper:zookeeper
+    depends_on:
+      - zookeeper
+    environment:
+      - ZK_HOSTS=zookeeper:2181
+      - APPLICATION_SECRET:"letmein"
+    ports:
+      - "9000:9000"
+    networks:
+      - zkm
+
+  kafka: # 相关文档 https://hub.docker.com/r/wurstmeister/kafka/dockerfile
+    build:
+      context: .
+      args:
+        - KAFKA_VER=latest
+    links:
+      - zookeeper:zookeeper
+    depends_on:
+      - zookeeper
+    #volumes:
+      #- ./config/:/opt/kafka/config
+      #- ../../logs/kafka/:/opt/kafka/logs
+    environment:
+      - KAFKA_BROKER_ID=0
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://192.168.0.1:9092 #宿主机器的IP地址
+      - KAFKA_LISTENERS=PLAINTEXT://0.0.0.0:9092
+    ports:
+      - "9092:9092"
+    networks:
+      - zkm
+    restart: always
+
+networks:
+  zkm:

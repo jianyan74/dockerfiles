@@ -1,0 +1,28 @@
+version: '3'
+services:
+  es_n2:
+    image: elasticsearch:7.3.2
+    container_name: es_n2
+    privileged: true
+    environment:
+      - cluster.name=elasticsearch-cluster
+      - node.name=node2
+      - node.master=true
+      - node.data=true
+      - bootstrap.memory_lock=true
+      - http.cors.enabled=true
+      - http.cors.allow-origin=*
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - "discovery.zen.ping.unicast.hosts=192.168.0.1:9300,192.168.0.1:9301,192.168.0.1:9302,192.168.0.1:9303,192.168.0.1:9304"
+      - "discovery.zen.minimum_master_nodes=2"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - ./data:/usr/share/elasticsearch/data
+      - ./logs:/usr/share/elasticsearch/logs
+    ports:
+      - 9200:9200
+      - 9300:9300
+    network_mode: host

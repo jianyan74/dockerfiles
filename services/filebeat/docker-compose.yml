@@ -1,0 +1,15 @@
+version: '3.0'
+services:
+  filebeat: # 相关文档 https://hub.docker.com/_/kibana
+    build:
+      context: .
+      args:
+        - FILEBEAT_VER=7.3.2 # 版本需要和es保持一致
+    volumes:
+      - ../../logs/filebeat/:/usr/share/filebeat/logs/
+      - ../../data/filebeat/:/usr/share/filebeat/data
+      - ../../logs:/var/log/sys
+      - ./filebeat.yml:/usr/share/filebeat/filebeat.yml
+      - ./modules.d:/usr/share/filebeat/modules.d
+    restart: always
+    network_mode: host
